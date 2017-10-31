@@ -6,14 +6,12 @@
 #include <array>
 #include <fstream>
 #include <cmath>
+#include <cassert>
+#include <random>
+#include "Constants.hpp"
 
-//CONSTANTES NEURONE
-constexpr double R(20);
-constexpr double TAU(20);
-constexpr double H(1); //1ms
-constexpr double TH_POTENTIAL(20);
-constexpr unsigned int DELAY(10);
-//constexpr double REFRACTORY_TIME(0.001);Inutile car 1 passage dans la boucle du main correspond a ce temps.
+
+
 
 
 class Neuron {
@@ -21,30 +19,33 @@ class Neuron {
 private:
 		
 	double membranePotential_;
-	double nbSpikes_;
+	int nbSpikes_;
 	bool refractory_;
+	double refractoryTime_;
 	std::vector<double> spikeTimes_;
-	std::array<double,(DELAY+1)> buffer;
+	std::array<double,BUFFER_SIZE> buffer_;
+	std:: vector<Neuron*> postNeurons_;
 	
 
 public:
 	double getMembranePotential() const;
-	double getNbSpikes() const;
+	int getNbSpikes() const;
 	std::vector<double> getTimeSpikes() const;
+	std::vector<Neuron*> getPostNeurons() const;
 	bool isRefractory() const;
 
 
 	
 	void setMembranePotential(double potential);
-	void setNbSpikes(double nb);
 	void setRefractory(bool r);
 
 
-	bool update(double simtime, double I_ext);
+	bool update(int currentStep,int nbSteps, double I_ext);
 	void addTimeSpike(double time);
+	void addPostNeuron(std:: vector<Neuron*> postNeurons);
 	double solveDifferentialEquation(double I_ext) const;
 	double updateBuffer();
-	void receive(double simtime,double J);
+	void receive(int currentStep);
 
 	
 	Neuron();

@@ -1,11 +1,9 @@
 #ifndef NETWORK_H
 #define NETWORK_H
-#include <iostream>
-#include <vector>
 #include "neuron.hpp"
 
-constexpr double J(10.0);
-
+constexpr unsigned int nbNeurons(20);
+typedef std::array<std::array<bool, nbNeurons>, nbNeurons> Matrice;
 
 class Network{
 	
@@ -13,12 +11,14 @@ private:
 
 	std::vector<Neuron*> neurons_;
 	bool spike_;
+	Matrice neuronsRelations_;
 
 public:
 	Neuron getNeuron(int n);
+	void addNeuron(Neuron* neuron);
 	void reset();
-	void update(double simtime, double I_ext);
-	Network(std::vector<Neuron*> neurons);
+	void update(int currentStep, int nbSteps, double I_ext);
+	Network();
 	~Network();
 	
 	
